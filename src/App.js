@@ -20,58 +20,60 @@ import NewList from "./pages/newList/NewList";
 import MovieList from "./pages/movieList/MovieList";
 import { Movie } from "@material-ui/icons";
 import NewMovie from "./pages/newMovie/NewMovie";
-import NewSerie from "./pages/Newserie/NewSerie"
-
+import NewSerie from "./pages/Newserie/NewSerie";
+import { AuthContextProvider } from "./context/authContext/AuthContext";
 
 function App() {
   const { user } = useContext(AuthContext);
   return (
-    <Router>
-      <Switch>
-        <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
-        {user && (
-          <>
-            <Topbar />
-            <div className="container">
-              <Sidebar />
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route path="/users">
-                <UserList />
-              </Route>
-              <Route path="/user/:userId">
-                <User />
-              </Route>
-              <Route path="/newUser">
-                <NewUser />
-              </Route>
-              <Route path="/movies">
-                <MovieList />
-              </Route>
-              <Route path="/movie/:movieId">
-                <Movie />
-              </Route>
-              <Route path="/newMovie">
-                <NewMovie />
-              </Route>
-              <Route path="/newSeries">
-               <NewSerie/>
-              </Route>
-              <Route path="/lists">
-                <ListList />
-              </Route>
-              <Route path="/list/:listId">
-                <List />
-              </Route>
-              <Route path="/newlist">
-                <NewList />
-              </Route>
-            </div>
-          </>
-        )}
-      </Switch>
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <Switch>
+          <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
+          {user && (
+            <>
+              <Topbar />
+              <div className="container">
+                <Sidebar />
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route path="/users">
+                  <UserList />
+                </Route>
+                <Route path="/user/:userId">
+                  <User />
+                </Route>
+                <Route path="/newUser">
+                  <NewUser />
+                </Route>
+                <Route path="/movies">
+                  <MovieList />
+                </Route>
+                <Route path="/movie/:movieId">
+                  <Movie />
+                </Route>
+                <Route path="/newMovie">
+                  <NewMovie />
+                </Route>
+                <Route path="/newSeries">
+                  <NewSerie />
+                </Route>
+                <Route path="/lists">
+                  <ListList />
+                </Route>
+                <Route path="/list/:listId">
+                  <List />
+                </Route>
+                <Route path="/newlist">
+                  <NewList />
+                </Route>
+              </div>
+            </>
+          )}
+        </Switch>
+      </Router>
+    </AuthContextProvider>
   );
 }
 
