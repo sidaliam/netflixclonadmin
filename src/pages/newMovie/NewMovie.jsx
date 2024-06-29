@@ -12,6 +12,7 @@ export default function NewMovie() {
   const [trailer, setTrailer] = useState(null);
   const [video, setVideo] = useState(null);
   const [uploaded, setUploaded] = useState(0);
+  const [progressupload,setprogressupload]=useState(0);
 
   const { dispatch } = useContext(MovieContext);
 
@@ -30,6 +31,7 @@ export default function NewMovie() {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
+          setprogressupload(progress)
         },
         (error) => {
           console.log(error);
@@ -170,6 +172,7 @@ export default function NewMovie() {
             onChange={(e) => setVideo(e.target.files[0])}
           />
         </div>
+        <p>{progressupload} %</p>
         {uploaded === 5 ? (
           <button className="addProductButton" onClick={handleSubmit}>
             Create
