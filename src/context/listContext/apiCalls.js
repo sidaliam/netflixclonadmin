@@ -44,7 +44,7 @@ export const createList = async (list, dispatch) => {
 export const deleteList = async (id, dispatch) => {
   dispatch(deleteListStart());
   try {
-    await axios.delete("https://backendnetflix-paxc.onrender.com/api/lists/" + id, {
+    await axios.delete("https://backendnetflix-paxc.onrender.com/api/lists" + id, {
       headers: {
         token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
       },
