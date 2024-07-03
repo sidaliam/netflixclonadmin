@@ -23,31 +23,30 @@ export default function NewMovie() {
 
   const upload = (items) => {
     items.forEach((item) => {
-      const formData = new FormData();
-      formData.append("file", item.file);
-      
-      fetch("https://kiraadz.com/upload.php", {
-        method: "POST",
-        body: formData,
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.url) {
-          console.log("File uploaded successfully:", data.url);
-          setMovie((prev) => {
-            return { ...prev, [item.label]: data.url };
+      const fileName = new Date().getTime() + item.label + item.file.name;
+      const uploadTask = storage.ref(`/items/${fileName}`).put(item.file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          setprogressupload(progress)
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+            setMovie((prev) => {
+              return { ...prev, [item.label]: url };
+            });
+            setUploaded((prev) => prev + 1);
           });
-          setUploaded((prev) => prev + 1);
-        } else {
-          console.error("Upload failed:", data.error);
         }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
+      );
     });
   };
-  
 
   const handleUpload = (e) => {
     e.preventDefault();
