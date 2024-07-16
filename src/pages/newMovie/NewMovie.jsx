@@ -256,7 +256,7 @@ export default function NewMovie() {
           />
         </div>
         <p>{progressupload} %</p>
-        {uploaded === 5 ? (
+        {uploaded === 6 ? (
           <button className="addProductButton" onClick={handleSubmit}>
             Create
           </button>
