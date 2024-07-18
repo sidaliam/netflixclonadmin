@@ -5,63 +5,21 @@ import { MovieContext } from "../../context/movieContext/MovieContext";
 import axios from "axios";
 
 export default function NewMovie() {
-  const [movie, setMovie] = useState({
-    title: "",
-    desc: "",
-    img: null,
-    imgTitle: null,
-    imgSm: null,
-    trailer: null,
-    video: null,
-    year: "",
-    limit: "",
-    genre: "",
-    isSeries: false,
-    subtitles: []
-  });
-  const [newSubtitle, setNewSubtitle] = useState({
-    src: null,
-    srcLang: "",
-    label: ""
-  });
-  const [progressupload, setProgressUpload] = useState(0);
+  const [movie, setMovie] = useState(null);
+  const [img, setImg] = useState(null);
+  const [imgTitle, setImgTitle] = useState(null);
+  const [imgSm, setImgSm] = useState(null);
+  const [trailer, setTrailer] = useState(null);
+  const [video, setVideo] = useState(null);
+  const [subtitles, setsubtitles] = useState(null);
   const [uploaded, setUploaded] = useState(0);
+  const [progressupload, setprogressupload] = useState(0);
 
   const { dispatch } = useContext(MovieContext);
 
   const handleChange = (e) => {
     const value = e.target.value;
-    setMovie({
-      ...movie,
-      [e.target.name]: value
-    });
-  };
-
-  const handleSubtitleChange = (e) => {
-    const value = e.target.value;
-    setNewSubtitle({
-      ...newSubtitle,
-      [e.target.name]: value
-    });
-  };
-
-  const handleSubtitleFileChange = (e) => {
-    setNewSubtitle({
-      ...newSubtitle,
-      src: e.target.files[0]
-    });
-  };
-
-  const addSubtitle = () => {
-    setMovie((prev) => ({
-      ...prev,
-      subtitles: [...prev.subtitles, newSubtitle]
-    }));
-    setNewSubtitle({
-      src: null,
-      srcLang: "",
-      label: ""
-    });
+    setMovie({ ...movie, [e.target.name]: value });
   };
 
   const upload = (items) => {
@@ -74,7 +32,7 @@ export default function NewMovie() {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
-          setProgressUpload(progress);
+          setprogressupload(progress);
         },
         (error) => {
           console.log(error);
@@ -93,22 +51,14 @@ export default function NewMovie() {
 
   const handleUpload = (e) => {
     e.preventDefault();
-    const itemsToUpload = [
-      { file: movie.img, label: "img" },
-      { file: movie.imgTitle, label: "imgTitle" },
-      { file: movie.imgSm, label: "imgSm" },
-      { file: movie.trailer, label: "trailer" },
-      { file: movie.video, label: "video" },
-    ];
-    movie.subtitles.forEach((subtitle, index) => {
-      itemsToUpload.push({
-        file: subtitle.src,
-        label: `subtitle${index}`,
-        srcLang: subtitle.srcLang,
-        labelSubtitle: subtitle.label
-      });
-    });
-    upload(itemsToUpload);
+    upload([
+      { file: img, label: "img" },
+      { file: imgTitle, label: "imgTitle" },
+      { file: imgSm, label: "imgSm" },
+      { file: trailer, label: "trailer" },
+      { file: video, label: "video" },
+      { file: subtitles, label: "subtitles" },
+    ]);
   };
 
   const handleSubmit = async (e) => {
@@ -124,32 +74,13 @@ export default function NewMovie() {
       <h1 className="addProductTitle">New Movie</h1>
       <form className="addProductForm">
         <div className="addProductItem">
-          <label>sous titres</label>
+          <label>sous-titres</label>
           <input
             type="file"
-            id="src"
-            name="src"
-            onChange={handleSubtitleFileChange}
+            id="subtitles"
+            name="img"
+            onChange={(e) => setsubtitles(e.target.files[0])}
           />
-          <label>langue</label>
-          <input
-            type="text"
-            id="srcLang"
-            name="srcLang"
-            value={newSubtitle.srcLang}
-            onChange={handleSubtitleChange}
-          />
-          <label>label</label>
-          <input
-            type="text"
-            id="label"
-            name="label"
-            value={newSubtitle.label}
-            onChange={handleSubtitleChange}
-          />
-          <button type="button" onClick={addSubtitle}>
-            Add Subtitle
-          </button>
         </div>
         <div className="addProductItem">
           <label>Image</label>
@@ -157,16 +88,17 @@ export default function NewMovie() {
             type="file"
             id="img"
             name="img"
-            onChange={(e) => setMovie({ ...movie, img: e.target.files[0] })}
+            onChange={(e) => setImg(e.target.files[0])}
           />
         </div>
+
         <div className="addProductItem">
           <label>Title image</label>
           <input
             type="file"
             id="imgTitle"
             name="imgTitle"
-            onChange={(e) => setMovie({ ...movie, imgTitle: e.target.files[0] })}
+            onChange={(e) => setImgTitle(e.target.files[0])}
           />
         </div>
         <div className="addProductItem">
@@ -175,7 +107,7 @@ export default function NewMovie() {
             type="file"
             id="imgSm"
             name="imgSm"
-            onChange={(e) => setMovie({ ...movie, imgSm: e.target.files[0] })}
+            onChange={(e) => setImgSm(e.target.files[0])}
           />
         </div>
         <div className="addProductItem">
@@ -244,7 +176,7 @@ export default function NewMovie() {
           <input
             type="file"
             name="trailer"
-            onChange={(e) => setMovie({ ...movie, trailer: e.target.files[0] })}
+            onChange={(e) => setTrailer(e.target.files[0])}
           />
         </div>
         <div className="addProductItem">
@@ -252,7 +184,7 @@ export default function NewMovie() {
           <input
             type="file"
             name="video"
-            onChange={(e) => setMovie({ ...movie, video: e.target.files[0] })}
+            onChange={(e) => setVideo(e.target.files[0])}
           />
         </div>
         <p>{progressupload} %</p>
